@@ -168,15 +168,16 @@ FROM employees emp
 			AND emp.fire_at IS null
 			AND sal.end_at IS null
 WHERE
-	sal.salary > (
+	sal.salary >= (
 	select
 		AVG(salary)
 	FROM salaries
 	WHERE
 		end_at IS null)
+ORDER BY sal.salary ASC -- 풀이과정에서 결과 비교를 위해 추가
 ;
 
--- 가장 높은 급여를 받은 이력이있는 사원의 사번과 급여를 조회
+-- 가장 높은 급여를 받은 이력이 있는 사원의 사번과 급여를 조회
 SELECT
 	emp.emp_id
 	, sal.salary
@@ -189,3 +190,17 @@ WHERE sal.salary = (
 		MAX(salary)
 	FROM salaries
 )
+;
+
+-- 풀이) salaries 테이블에 사번과 급여가 있어서 조인이 필요가 없음
+SELECT
+	emp_id
+	, salary
+FROM salaries sal
+WHERE
+	salary = (
+		select
+			MAX(salary)
+		FROM salaries
+	)
+;
